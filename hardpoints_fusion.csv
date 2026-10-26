@@ -1,0 +1,25 @@
+Corner,Point,X_mm,Y_mm,Z_mm
+FRONT,Upper wishbone - outer (UBJ),738.733,1240.441,397.134
+FRONT,Upper wishbone - inner front,538.026,1398.372,323.367
+FRONT,Upper wishbone - inner rear,538.026,1160.949,323.367
+FRONT,Lower wishbone - outer (LBJ),725.288,1244.664,251.311
+FRONT,Lower wishbone - inner front,522.189,1356.858,178.832
+FRONT,Lower wishbone - inner rear,522.19,1161.088,178.829
+FRONT,Tie rod - outer,811.371,1368.208,321.595
+FRONT,Tie rod - inner,436.844,1324.982,274.777
+FRONT,Wheel centre,831.203,1220.793,336.166
+FRONT,Lower Shock mount,730.792,1245.698,258.958
+FRONT,Upper Shock mount,461.913,1223.244,520.26
+REAR,Upper wishbone - outer (UBJ),714.48,-1438.692,437.503
+REAR,Upper wishbone - inner front,472.096,-1306.738,396.621
+REAR,Upper wishbone - inner rear,472.096,-1520.197,396.62
+REAR,Lower wishbone - outer (LBJ),706.396,-1412.732,267.883
+REAR,Lower wishbone - inner front,499.775,-1279.645,240.943
+REAR,Lower wishbone - inner rear,499.765,-1583.591,241.942
+REAR,Wheel centre,822.89,-1424.208,347.542
+REAR,Lower Shock mount,710.198,-1426.845,420.32
+REAR,Upper Shock mount,390.621,-1426.845,762.697
+REAR,Drive shaft - outer,830.122,-1418.781,364.651
+REAR,Drive shaft - Inner,448.193,-1418.781,296.254
+REAR,Toe link - inner,432.161,-1220.09,296.486
+REAR,Toe link - outer,761.076,-1339.735,347.759

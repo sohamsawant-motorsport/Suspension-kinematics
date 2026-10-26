@@ -1,0 +1,54 @@
+# ---------------------------------------------------------------------------
+# Confidential reference data.
+#
+# Nothing confidential is stored inside this tree in the first place -- it lives
+# in a folder outside the repository, found through GT3_PRIVATE_DIR. These rules
+# are a second line of defence in case a private file is ever copied in here by
+# mistake. See software/benchmarks.py.
+# ---------------------------------------------------------------------------
+benchmarks_private.py
+*_private.py
+!*_private.example.py
+validate_mech_balance_benchmark.py
+private-benchmarks/
+private/
+
+# Third-party vehicle mesh and anything baked from it
+*.npz
+*.stl
+*.glb
+*.obj
+
+# Reference documents
+*.pdf
+*.docx
+*.pptx
+
+# ---------------------------------------------------------------------------
+# Python
+# ---------------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+.pytest_cache/
+.mypy_cache/
+
+# ---------------------------------------------------------------------------
+# Output and scratch
+# ---------------------------------------------------------------------------
+*.png
+*.jpg
+*.svg
+!docs/*.png
+hardpoints_*_out.csv
+snapshots/
+.DS_Store
+Thumbs.db
+
+# Editors
+.vscode/
+.idea/
+*.swp

@@ -1,0 +1,9 @@
+numpy>=1.24
+matplotlib>=3.7
+
+# Optional. One section of validate_mech_balance.py uses it for a least-squares
+# fit and is skipped when it is absent.
+scipy>=1.10
+
+# Tkinter ships with CPython on Windows and macOS. On Debian/Ubuntu:
+#     sudo apt install python3-tk
