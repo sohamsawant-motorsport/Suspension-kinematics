@@ -175,15 +175,15 @@ if __name__ == "__main__":
     delta, arm = steer_angle_for_rack()
     p = _load_front_points()
     dX, dY, dZ = p[UBJ_NAME] - p[LBJ_NAME]
-    print("Baseline geometry — DERIVED from the CAD hard points")
+    print("Baseline geometry, DERIVED from the CAD hard points")
     print("-" * 62)
     print(f"  UBJ - LBJ      : dX {dX:+.3f}  dY {dY:+.3f}  dZ {dZ:+.3f} mm")
     print(f"  KPI            : {STOCK_KPI:+.4f} deg   "
-          f"({'leans INBOARD' if STOCK_KPI > 0 else 'leans OUTBOARD — artistic mesh'})")
+          f"({'leans INBOARD' if STOCK_KPI > 0 else 'leans OUTBOARD, artistic mesh'})")
     print(f"  caster         : {STOCK_CASTER:+.4f} deg  "
           f"({'leans rearward' if STOCK_CASTER > 0 else 'leans forward'})")
     print(f"  steering arm   : {arm:.1f} mm")
     print(f"  rack {RACK_TRAVEL_MM:.0f} mm     : steer delta ~= {delta:.2f} deg")
     print()
-    print("  These are computed here and nowhere else — the camber and scrub")
+    print("  These are computed here and nowhere else: the camber and scrub")
     print("  modules both read them, so they cannot disagree about the sign.")

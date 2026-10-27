@@ -4,13 +4,19 @@
 # Load it on the FRONT page, then load it again on the REAR page.
 #
 # Resulting values:
-#   FRONT  KPI 7.64  caster 7.99  scrub 17.33  trail 30.21
+#   FRONT  (static camber -2.7 deg)
+#          KPI 7.64  caster 7.99  scrub 17.33  trail 30.21
 #          camber gain -0.694 /25mm   bump steer -0.00277 deg/mm
-#          roll centre +30.78 mm      RC slope -0.675
-#   REAR   KPI 7.01  caster 3.00  scrub 7.06  trail 30.00  (static camber -1.5 deg)
-#          camber gain -0.789 /25mm   bump steer +0.00030 deg/mm toe-IN
-#          roll centre +38.01 mm      RC slope -0.779
-#          FVSA 1830   recovery 46.8 %   arm ratio 1.234   RC lateral 86 mm/deg
+#          roll centre +30.78 mm      RC slope -0.685 (fit over +/-15 mm bump)
+#          Ackermann +16.4 % -- see README, the tie rod is one step short
+#   REAR   (static camber -1.5 deg)
+#          KPI 7.01  caster 3.00  scrub 7.06  trail 30.00
+#          camber gain -0.787 /25mm   bump steer +0.00040 deg/mm toe-IN
+#          roll centre +38.01 mm      RC slope -0.782 (fit over +/-15 mm bump)
+#          FVSA 1830   recovery 47.0 %   arm ratio 1.240 (lower/upper, perp
+#          to the inner hinge axis)   RC lateral +86 mm at 1 deg body roll
+#
+# Every value above is printed by hardpoints/verify_table.py from this file.
 #
 #   wheelbase 2700.0   front track 1742.0   rear track 1712.0
 #

@@ -518,7 +518,7 @@ class App:
                f"radial stiffness {engine.tyre.radial_stiffness_N_per_mm():.0f} N/mm",
                fontsize=9.5, color="#444", transform=a.transAxes)
         y -= 0.05
-        a.text(0.02, y, "Physics from ../software/ — validated by validate_scrub_trail.py "
+        a.text(0.02, y, "Physics from ../software/, validated by validate_scrub_trail.py "
                "(33 checks) and validate_wishbone.py (27 checks).",
                fontsize=9.5, color="#444", style="italic", transform=a.transAxes)
         t.draw()

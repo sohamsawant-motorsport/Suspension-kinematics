@@ -182,7 +182,7 @@ for dy in (-20.0, 0.0, 30.0, 60.0):
     worst_c = max(worst_c, abs(dht - tr2 * u2[2]))
     ok_c &= abs(dht - tr2 * u2[2]) < 1e-2
 check("WITH camber: d(half-track)/dd == trail*u_z exactly", ok_c,
-      f"worst {worst_c:.2e} mm/rad — the R*sin(caster) term cancels")
+      f"worst {worst_c:.2e} mm/rad: the R*sin(caster) term cancels")
 
 # ---------------------------------------------------------------- 6. CROSS-MODULE
 print("\n6. CROSS-MODULE  (scrub_trail rotation  vs  steer_camber.camber_change)")
@@ -235,5 +235,5 @@ if fails:
     for f in fails:
         print("   -", f)
     raise SystemExit(1)
-print("ALL CHECKS PASSED — the maths, the code and the FR CAD hard points agree.")
+print("ALL CHECKS PASSED: the maths, the code and the FR CAD hard points agree.")
 print("=" * 74)

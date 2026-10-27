@@ -1,9 +1,9 @@
 # ---------------------------------------------------------------------------
-# Confidential reference data.
+# Private reference data.
 #
-# Nothing confidential is stored inside this tree in the first place -- it lives
-# in a folder outside the repository, found through GT3_PRIVATE_DIR. These rules
-# are a second line of defence in case a private file is ever copied in here by
+# None of it is stored inside this tree in the first place -- it lives in a
+# folder outside the repository, found through GT3_PRIVATE_DIR. These rules are
+# a second line of defence in case a private file is ever copied in here by
 # mistake. See software/benchmarks.py.
 # ---------------------------------------------------------------------------
 benchmarks_private.py

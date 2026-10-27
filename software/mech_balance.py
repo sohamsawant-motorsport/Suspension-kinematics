@@ -24,7 +24,7 @@ fast you are going. Aero balance moves with speed; this does not.
 
 THE TWO NUMBERS THE BENCHMARK TABULATES
 ---------------------------------------
-A manufacturer setup handbook prints two tables per axle, both as CHANGES from a
+A GT3 setup handbook prints two tables per axle, both as CHANGES from a
 baseline setup, over a grid of spring rate x anti-roll-bar position:
 
   Mechanical Balance FA [%]   the change in FRONT LLTD, in percentage points.
@@ -33,7 +33,7 @@ baseline setup, over a grid of spring rate x anti-roll-bar position:
                               as a percentage. + = stiffer, so less body roll.
 
 Those definitions are not stated anywhere -- they were RECOVERED by
-reconstructing every published cell from that handbook's own spring and
+reconstructing every published cell from a reference car's own spring and
 anti-roll-bar rate tables. `validate_mech_balance.py` documents that
 reconstruction and re-runs it as a test. Two results from it matter here:
 

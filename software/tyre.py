@@ -20,9 +20,8 @@ WHERE THE NUMBERS COME FROM
 The fitment (`325/680-18`) is a published size: 680 mm nominal overall
 diameter, hence a 340 mm free radius.
 
-The load/deflection behaviour is NOT published. This project developed against
-a tyre supplier's confidential data booklet, and none of those measurements are
-in this repository. Instead the module ships a clearly-labelled **placeholder**:
+The load/deflection behaviour is NOT published, and no measured set is in this
+repository. Instead the module ships a clearly-labelled **placeholder**:
 a linear carcass of `PLACEHOLDER_STIFFNESS_N_PER_MM`, which is the right order
 for an 18-inch racing slick and is enough for every routine here to run.
 

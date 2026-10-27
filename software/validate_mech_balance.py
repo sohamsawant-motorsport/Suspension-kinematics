@@ -33,10 +33,10 @@ VALIDATION SUITE for mechanical balance and roll stiffness.
                        agrees with the value recovered from the benchmark's
                        published tables. Two unrelated routes, one number.
 
-Section 6 ran against a confidential performance handbook and is kept in a
-separate, git-ignored file. `mech_balance.py` carries the DEFINITIONS that
-reconstruction recovered -- which are this project's own work and are published
-here -- never the reference car's numbers.
+Section 6 ran against reference data that is not in this repository, and it is
+kept in a separate, git-ignored file. `mech_balance.py` carries the DEFINITIONS
+that reconstruction recovered -- which are this project's own work and are
+published here -- never the reference car's numbers.
 """
 
 import io
@@ -251,18 +251,18 @@ check("an unreachable balance is reported, not silently clipped",
 # ===========================================================================
 print("\n6  BENCHMARK RECONSTRUCTION")
 # ===========================================================================
-# The reconstruction that recovered the two table definitions ran against a
-# confidential performance handbook, so neither the figures nor the section
-# that uses them are in this repository. If the private file is installed
-# beside this one it is exec'd here, in this module's own namespace, so the
-# suite behaves exactly as it always did. Without it the section is skipped
-# and nothing later depends on it.
+# The reconstruction that recovered the two table definitions ran against
+# reference data that is not in this repository, so neither the figures nor the
+# section that uses them are here. If the private file is installed beside this
+# one it is exec'd here, in this module's own namespace, so the suite behaves
+# exactly as it always did. Without it the section is skipped and nothing later
+# depends on it.
 def _find_private(name):
     """Look for a private file on GT3_PRIVATE_DIR, then anywhere on sys.path.
 
-    It is deliberately NOT looked for inside this repository. Confidential
-    material lives outside the tree entirely, so publishing this repo cannot
-    leak it even if a .gitignore is edited by mistake.
+    It is deliberately NOT looked for inside this repository. Reference data
+    lives outside the tree entirely, so publishing this repo cannot leak it
+    even if a .gitignore is edited by mistake.
     """
     import sys
     roots = [os.environ.get("GT3_PRIVATE_DIR", "")] + list(sys.path)

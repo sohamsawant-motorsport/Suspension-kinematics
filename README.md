@@ -22,7 +22,7 @@ python software/explorer.py
 
 Windows users can double-click `run_tool.bat` instead.
 
-Needs Python 3.10 or later, NumPy, Matplotlib and Tkinter. SciPy is optional —
+Needs Python 3.10 or later, NumPy, Matplotlib and Tkinter. SciPy is optional:
 one validation section uses it and is skipped if it is missing.
 
 ---
@@ -44,7 +44,7 @@ FRONT,Upper wishbone - outer (UBJ),815.936,1222.414,399.588
 `Z` is vertical. The file holds the front-right and rear-right corners; the left
 side is their mirror.
 
-A second set is in `hardpoints/` — the geometry this project ended up with after
+A second set is in `hardpoints/`, the geometry this project ended up with after
 a front and rear redesign. Load it to see a worked-through result instead of the
 starting point.
 
@@ -55,7 +55,7 @@ other tab recalculates. The reference geometry stays drawn underneath so a
 change is visible as a difference rather than a new picture.
 
 **4. Read the numbers, not just the curves.** Each corner page carries a text
-readout with the static values — KPI, caster, scrub, trail, camber gain, camber
+readout with the static values: KPI, caster, scrub, trail, camber gain, camber
 recovery, bump steer, roll-centre height, motion ratio, steering arm.
 
 **5. Save.** Writes a CSV in the same format, so a saved set loads straight back.
@@ -69,18 +69,18 @@ recovery, bump steer, roll-centre height, motion ratio, steering arm.
 | tab | what it shows | what moves it |
 |---|---|---|
 | **Camber–KPI**, **Camber–caster** | camber change against steer angle, one curve per KPI or caster value | the two ball joints |
-| **Camber map** | camber over the KPI–caster plane at a chosen steer angle | — |
+| **Camber map** | camber over the KPI–caster plane at a chosen steer angle | - |
 | **Patch path** | where the contact patch travels as the wheel steers | scrub and trail |
 | **Scrub & trail** | both against steer, with the sign convention drawn | sliding the ball joints along the steering axis |
 | **Wheelbase & track** | how much each one changes with steer | scrub sets the curvature, trail sets the slope |
 | **Heave & bump steer** | toe against wheel travel | the tie rod or toe link, after the instant centre is settled |
 | **Body roll** | camber against body roll, which is what the tyre actually sees | camber recovery, i.e. FVSA |
 | **Roll centre** | height against wheel travel | common-mode inner pickup height |
-| **RC in roll** | the roll centre's lateral migration — usually the number that matters | the ratio of the two arm lengths |
+| **RC in roll** | the roll centre's lateral migration, usually the number that matters | the ratio of the two arm lengths |
 | **KPI/caster in bump** | how the steering axis itself moves through travel | the side-view hinge-axis angles |
 | **Motion ratio** | wheel travel over spring travel, through the stroke | where the damper's lower mount sits, and how far the damper leans |
 | **Ackermann** | the axle-level percentage on the real steer geometry (front only) | the tie-rod outer, fore and aft |
-| **Geometry 2D / 3D** | front, side and top views with the construction lines on them | — |
+| **Geometry 2D / 3D** | front, side and top views with the construction lines on them | - |
 
 ### VEHICLE page
 
@@ -139,24 +139,20 @@ REFERENCES.md            the books and papers behind the maths
 
 ## Reference data
 
-Some of this work was done alongside a manufacturer's performance handbook and a
-tyre supplier's data booklet. Both are confidential and **no figure from either
-is in this repository.**
-
-Where the code wants a reference car or a measured tyre it asks
-`software/benchmarks.py`, which looks for a private module on `GT3_PRIVATE_DIR`
-— a folder outside this tree, so publishing the repository cannot leak anything
-even if a `.gitignore` rule is edited by mistake.
+Every benchmark value is read at run time, not written into the code. Where the
+tool wants a reference car or a measured tyre it asks `software/benchmarks.py`,
+which looks for a private module on `GT3_PRIVATE_DIR`, a folder outside this
+tree. Nothing in this repository depends on it being there.
 
 With no private data installed the tool runs the same, minus the comparisons:
-anti-geometry targets come from the open literature, the roll-axis reference is
-the ground-level axis, and the tyre is a labelled linear placeholder.
-`software/benchmarks_private.example.py` shows the shape if you have data of
-your own.
+anti-geometry targets come from the open literature in
+[REFERENCES.md](REFERENCES.md), the roll-axis reference is the ground-level
+axis, and the tyre is a labelled linear placeholder.
+`software/benchmarks_private.example.py` shows the shape, so you can point it
+at measurements of your own.
 
 ---
 
 ## Licence
 
-MIT, see [LICENSE](LICENSE). The hard points are an independent reconstruction,
-not manufacturer data.
+MIT, see [LICENSE](LICENSE). The hard points are an independent reconstruction.

@@ -1,7 +1,7 @@
 # The maths behind camber-by-steer  (double-validation notes)
 
 Everything the tools compute comes from the five steps below. Read this next to
-`steer_camber.py` — the code is a line-for-line copy of these equations.
+`steer_camber.py`. The code is a line-for-line copy of these equations.
 
 Frame (right front wheel): **x = forward, y = inboard (toward car centre), z = up.**
 Angles: **λ = KPI**, **ν = caster**, **δ = road-wheel steer**.
@@ -70,7 +70,7 @@ and for modest angles (`tan≈sin`, `|u|≈1`):
   **second-order**. Small, UNFAVOURABLE, only matters at large steer.
 
 `camber_change_approx()` is this formula. It matches the exact function to
-<0.01° at stock — that agreement is the double-check.
+<0.01° at stock, and that agreement is the double-check.
 
 ## 5. Rack travel → steer angle
 Steering arm = perpendicular distance from the tie-rod OUTER ball joint to the
@@ -80,7 +80,7 @@ L = |w × u| / |u| ,   w = (tie-rod outer − LBJ) ,  u = (UBJ − LBJ)
 δ ≈ rack / L        (radians; tie rod ≈ perpendicular to the arm)
 ```
 **Corrected by the wishbone solver:** the perpendicular arm (148.6 mm) is NOT the
-effective ratio — the tie rod is oblique to the steering arm, so `δ ≈ rack/L⊥`
+effective ratio: the tie rod is oblique to the steering arm, so `δ ≈ rack/L⊥`
 understates the steer by ~30%. The exact velocity relation
 `dδ/d(rack) = (x̂·t̂)/((k̂×r)·t̂)` gives an **effective arm of 114.1 mm**, hence
 `20 mm rack ≈ 10.04°` first-order (10.7° exact at the finite travel). Verified
@@ -88,7 +88,7 @@ against the full wishbone solver to 1e-5 rad/mm.
 
 ---
 
-## 6. Worked example — run it
+## 6. Worked example: run it
 `python steer_camber.py` prints the whole calculation step by step, with every
 intermediate number, for the baseline geometry (KPI −5.27°, caster +1.66°, steer 10°).
 The STEP A/B/C/D labels match the comments inside `camber_change()` and section A.6
@@ -114,7 +114,7 @@ and asserted equal across modules by `validate_scrub_trail.py`, so it cannot rec
 The CAD puts the UBJ **13.4 mm outboard** of the LBJ (confirmed against the front view),
 so this car's **KPI is negative: −5.27°**. Sign convention: KPI > 0 leans *inboard*.
 
-Because the KPI term is `+sin λ (1 − cos δ)`, a **negative** λ makes it negative too —
+Because the KPI term is `+sin λ (1 − cos δ)`, a **negative** λ makes it negative too,
 so it *adds* favourable camber instead of fighting the caster:
 
 | steer δ | caster term | KPI term | total Δγ |
@@ -134,16 +134,16 @@ favourable camber as the caster is. What the sign is worth:
 | collapses? | **never** | at 35° |
 
 ### The lesson (and why real cars still run positive KPI)
-Negative KPI *flatters* the camber curve — and costs **46.3 mm of extra scrub radius**,
+Negative KPI *flatters* the camber curve, and costs **46.3 mm of extra scrub radius**,
 with all the kickback, braking sensitivity and steering effort that brings. That is a
 bad trade, and it is exactly why real GT3s run **positive** KPI and simply accept the
 small camber penalty (a competitive GT3 runs low double-digit KPI). This car's geometry is
 an artistic mesh, not a design.
 
 So the baseline's real problems are **not** camber-by-steer. They are:
-1. **scrub radius 144.9 mm** — enormous (and confirmed by the CAD sketch's own 146.213 mm dimension);
-2. **mechanical trail reverses beyond +18° of steer** — the steering stops self-centring;
-3. **caster only 1.66°** — so almost none of the camber compensation is coming from the
+1. **scrub radius 144.9 mm**, enormous (and confirmed by the CAD sketch's own 146.213 mm dimension);
+2. **mechanical trail reverses beyond +18° of steer**, so the steering stops self-centring;
+3. **caster only 1.66°**, so almost none of the camber compensation is coming from the
    knob you would actually want to use for it.
 
 ## Verification numbers (printed by `python steer_camber.py`)
@@ -151,8 +151,8 @@ So the baseline's real problems are **not** camber-by-steer. They are:
 |---|---|---|---|---|
 | caster only ν=5, λ=0 | +20° | −1.708° | −1.708° | favourable, linear |
 | KPI only λ=8, ν=0 | +20° | +0.476° | +0.481° | unfavourable, 2nd-order |
-| caster odd | ±20° | ∓1.708° | — | flips sign with steer |
-| KPI even | ±20° | +0.476° | — | same sign both ways |
+| caster odd | ±20° | ∓1.708° | - | flips sign with steer |
+| KPI even | ±20° | +0.476° | - | same sign both ways |
 
 ## 7. Scrub radius & mechanical trail
 Covered by `scrub_trail.py` and `Study Guide/Unit 2 - Scrub & Mechanical Trail -
@@ -166,7 +166,7 @@ WORKED EXAMPLE.pdf`. Two things there that bite, both learned the hard way:
   distance as **146.213 mm** (1.3 mm = the mesh's asymmetry).
 * **`d(half-track)/dδ = trail·u_z` is exact; the rest are approximations.** The forms
   `d(wheelbase)/dδ ≈ scrub + R·sin λ` and `d(half-track)/dδ ≈ trail − R·sin ν` assume
-  the patch is the projected centre — but steering *induces* camber, which shifts it
+  the patch is the projected centre, but steering *induces* camber, which shifts it
   (~9.7 mm/rad of error). Only the half-track identity survives, and it simplifies:
   the `R·sin ν` term cancels.
 
@@ -174,9 +174,9 @@ WORKED EXAMPLE.pdf`. Two things there that bite, both learned the hard way:
 1. Place the ball joints so the LBJ→UBJ axis has a chosen KPI & caster
    (front view angle = KPI, side view angle = caster).
 2. Rotate the upright + wheel about that axis by δ.
-3. Measure the wheel plane's inclination (camber) before and after — the change
+3. Measure the wheel plane's inclination (camber) before and after. The change
    should equal the interactive readout at that (KPI, caster, δ).
 
 Provisional-box sanity (δ = 10.04°): KPI 7°, caster 8° → **Δγ = −1.28°**.
-(That box is a placeholder — the agreed plan is to derive the window from first
+(That box is a placeholder: the agreed plan is to derive the window from first
 principles once the wishbone solver gives roll-induced camber.)

@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 """Optional reference data, kept out of this repository.
 
-Parts of this project were developed against a manufacturer's performance
-handbook and a tyre supplier's data booklet. Both are confidential documents,
-so **no figure from either is in this repository**. Where the code wants a
-reference car to compare against, it asks here.
+Benchmark values are read at run time rather than written into the code.
+Where the code wants a reference car to compare against, it asks here. Nothing
+in this repository depends on an answer.
 
 If a file called `benchmarks_private.py` sits next to this one, its values are
 used. If it does not, every benchmark overlay is simply hidden and every check
@@ -18,9 +17,9 @@ fill it with figures for whatever reference car you are entitled to use.
 import os
 import sys
 
-# GT3_PRIVATE_DIR points at a folder OUTSIDE this repository. Nothing
-# confidential is ever stored inside the tree, so publishing it cannot leak
-# anything even if .gitignore is edited by mistake.
+# GT3_PRIVATE_DIR points at a folder OUTSIDE this repository, so reference
+# data never sits inside the tree and publishing it cannot leak anything even
+# if .gitignore is edited by mistake.
 _dir = os.environ.get("GT3_PRIVATE_DIR")
 if _dir and os.path.isdir(_dir) and _dir not in sys.path:
     sys.path.insert(0, _dir)
