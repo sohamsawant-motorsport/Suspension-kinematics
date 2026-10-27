@@ -65,9 +65,10 @@ radius that governs how fast the instant centre sweeps. The distance to a pivot
 
 **RC lateral** is how far sideways the roll centre has moved at one degree of
 body roll, from the two-corner axle model. It is quoted as a position, not a
-gradient, because the migration is not linear and a slope through the origin
-overstates what happens in the first degree, which is the only part a stiff GT
-car ever sees.
+gradient, because the migration is not linear: the curve is steepest through
+the origin, so a slope fitted across the roll range **understates** the first
+degree, which is the only part a stiff GT car ever sees. See the plot further
+down for the numbers.
 
 ## The line worth pointing at
 
@@ -97,6 +98,20 @@ changes.
 | starting | 846.8 mm |
 | starting, arms lengthened and nothing else | **28.2 mm** |
 | full redesign | 86.1 mm |
+
+![The RC in roll tab on the rear axle](../docs/rear-rc-in-roll.png)
+
+The redesigned rear on the tool's RC-in-roll tab. The middle plot is the one
+that matters: lateral movement against body roll, reaching +359 mm at the +5°
+the axes are drawn to. A stiff GT car lives in the first degree or so of that,
+which is why the table above quotes 1° rather than a gradient.
+
+The shape is the reason. The curve is steepest through the origin and flattens
+towards the extremes, so a straight line fitted across the whole roll range
+**understates** the first degree, which is the only part the car ever uses. On
+this axle the fitted gradient is 74.6 mm/° while the actual movement at 1° is
+86.1 mm. On the starting geometry it is worse: 587 mm/° fitted against 847 mm
+of real movement at 1°.
 
 Lengthening alone is worth **30×**, which is more than the net figure in the
 table. The later steps gave 57.9 mm of it back, in exchange for a roll centre

@@ -3,12 +3,14 @@
 A desktop tool for designing double-wishbone suspension geometry. Load a set of
 hard points, move one, and every derived quantity updates on the real linkage.
 
-![Rear camber recovery mapped against roll-centre height](studies/plots/rear_task5_recovery_map.png)
+![The front page, Geometry 2D tab](docs/front-geometry-2d.png)
 
-Rear camber recovery over the plane the upper ball joint can move in, and the
-roll-centre height that comes with it. The two fields run the same way, so you
-cannot ask for one without getting the other. That is the kind of question this
-tool exists to answer, and the kind a single number cannot.
+The front axle after the redesign. Front view with both linkages, their instant
+centres and the roll centre they put at +31 mm; side view with the steering axis
+and 30.2 mm of trail; top view with toe. The panel on the left is live: type a
+coordinate, press Enter, and every number and curve in the window is resolved
+again from the linkage. The grey geometry underneath is whatever you set as the
+reference, so a change reads as a difference rather than a new picture.
 
 ---
 
@@ -35,6 +37,18 @@ the migration, moves. On the rear that step by itself is worth 30×, more than
 the net figure above, because the later steps traded some of it back for
 roll-centre height. `hardpoints/verify_lengthening.py` builds the intermediate
 geometry the table cannot show and prints the comparison.
+
+![The RC in roll tab on the front axle](docs/front-rc-in-roll.png)
+
+The tab that row comes from. Top left is roll-centre height against body roll,
+bottom left is how far the roll centre slides sideways off the centreline, and
+right is the path it actually takes in the front view, coloured by roll angle.
+The box underneath reads the pair off at a chosen angle: at 1° of roll this
+axle moves its roll centre 49.8 mm sideways, while the height barely changes.
+
+Migration is the number a lap does not forgive. Roll-centre height is a static
+choice you make once; its lateral movement is what changes the car underneath
+the driver mid-corner, and it is invisible in every static readout.
 
 **The starting geometry is not a real GT3.** The hard points are my own Fusion
 measurement of a third-party display model, which is why stock KPI comes out at
@@ -171,6 +185,17 @@ recovery, bump steer, roll-centre height, motion ratio, steering arm.
 | **Ackermann** | the axle-level percentage on the real steer geometry (front only) | the tie-rod outer, fore and aft |
 | **Geometry 2D / 3D** | front, side and top views with the construction lines on them | - |
 
+The rear is the same page with the rack frozen and a toe link in place of the
+tie rod, so the same tabs mean the same things:
+
+![The rear page, Geometry 2D tab](docs/rear-geometry-2d.png)
+
+Rear axle, redesigned. Both instant centres sit at ±965 mm, which is the
+1837 mm swing arm behind 47 % camber recovery. Note the static camber reads
+−2.7° here rather than the −1.5° the hard-point set is specified at: camber is
+a setup input, not a hard point, and the readouts that move with it say so.
+Scrub reads 14.3 mm at −2.7° and 7.1 mm at −1.5° on these same points.
+
 ### VEHICLE page
 
 | tab | what it shows |
@@ -181,6 +206,19 @@ recovery, bump steer, roll-centre height, motion ratio, steering arm.
 | **Roll axis** | both roll centres and the axis between them, in side view |
 | **Anti geometry** | anti-dive, anti-lift and anti-squat, with what the side-view tilt costs in the front view |
 | **Mechanical balance** | lateral load-transfer distribution against spring and bar changes |
+
+![The vehicle page, load transfer and g-g](docs/vehicle-load-transfer.png)
+
+The two roll centres on this page are read live from the FRONT and REAR pages,
+so moving a wishbone pickup changes the load transfer here. Everything else in
+the left-hand column is a typed assumption and the panel labels it as one:
+masses, CG height, the ride frequencies the coil rates come from, and the tyre
+rate. The g-g map is shaded by the *lowest* of the four wheel loads, so the dark
+corners are where a wheel is about to leave the road rather than where grip
+runs out, and the bar chart is the four loads at whichever point you pick.
+
+Nothing on this page is measured. It is there to show which way a geometry
+change pushes the car, and by roughly how much.
 
 ---
 
@@ -193,9 +231,10 @@ is the only place the two meet. Mixing them is an error to the fourth power.
 
 **Ride frequency means two different things.** One definition leaves the tyre
 out, the other puts it in series with the spring. On a racing car the wheel rate
-is roughly half the tyre rate, so the two numbers differ by about 15 % and the
-published target bands belong to only one of them. Every spring function returns
-both and the panel prints both.
+is roughly half the tyre rate, so the two numbers differ by a lot and the
+published target bands belong to only one of them. On this car the front reads
+3.86 Hz with the tyre left out and 3.20 Hz with it in series, which is 17 %.
+Every spring function returns both and the panel prints both.
 
 **Anti-geometry is computed from patch motion, not from a swing arm.** The
 corner has one degree of freedom, so a force at the patch does no work on the
@@ -210,6 +249,23 @@ numbers from one piece of geometry.
 lower mount actually rides on rather than assuming the lower wishbone. Getting
 that wrong on a rear corner where the damper picks up high is a factor of nearly
 three on spring rate, because the motion ratio is squared.
+
+---
+
+## Where the design decisions came from
+
+Eight standalone sweeps in [studies/](studies/README.md), each written because a
+single number was not telling me whether a change helped or just moved the
+problem. They are not part of the tool.
+
+![Rear camber recovery mapped against roll-centre height](studies/plots/rear_task5_recovery_map.png)
+
+The one I keep coming back to. Camber recovery over the plane the upper ball
+joint can move in, and the roll-centre height that comes with it. The two fields
+run the same way, so you cannot ask for one without getting the other. Getting
+recovery from 20 % to a useful 50 % also lifted the roll centre to roughly
++40 mm, which happened to be where I wanted it. On a different car those two
+would have fought, and the map is how you find that out before you commit.
 
 ---
 
