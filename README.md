@@ -3,13 +3,102 @@
 A desktop tool for designing double-wishbone suspension geometry. Load a set of
 hard points, move one, and every derived quantity updates on the real linkage.
 
-It solves the corner in 3D. There is no side-view or front-view instant-centre
+![Rear camber recovery mapped against roll-centre height](studies/plots/rear_task5_recovery_map.png)
+
+Rear camber recovery over the plane the upper ball joint can move in, and the
+roll-centre height that comes with it. The two fields run the same way, so you
+cannot ask for one without getting the other. That is the kind of question this
+tool exists to answer, and the kind a single number cannot.
+
+---
+
+## What it found
+
+Working the front axle and then the rear through the tool moved the starting
+geometry to this. Both columns are printed from the two CSV files by
+`hardpoints/verify_table.py`; the full table, with the conventions it depends
+on, is in [hardpoints/README.md](hardpoints/README.md).
+
+| | starting | redesigned |
+|---|---|---|
+| front roll centre | 283.6 mm underground | **+30.8 mm** |
+| front bump steer | −0.117 °/mm | **−0.003 °/mm** |
+| front scrub radius | 144.9 mm | **17.3 mm** |
+| rear camber recovery | 20.4 % | **47.0 %** |
+| rear roll-centre migration | 847 mm at 1° of roll | **86 mm** |
+
+The last row is the one I would defend. Most of it came from lengthening both
+wishbones **along their own lines**, which changes an arm's radius while leaving
+its tangent alone: position and first-order motion are untouched, so KPI,
+caster, scrub and trail come out bit-identical and only the second-order term,
+the migration, moves. On the rear that step by itself is worth 30×, more than
+the net figure above, because the later steps traded some of it back for
+roll-centre height. `hardpoints/verify_lengthening.py` builds the intermediate
+geometry the table cannot show and prints the comparison.
+
+**The starting geometry is not a real GT3.** The hard points are my own Fusion
+measurement of a third-party display model, which is why stock KPI comes out at
+−5.27°, a value no manufacturer would build. That was useful rather than a
+problem: it gave me a car with realistic proportions and poor kinematics, so
+every number here is one I had to move myself.
+
+---
+
+## How the corner is solved
+
+It solves in 3D. There is no side-view or front-view instant-centre
 construction anywhere in the maths, because those are projections of a 3D
 mechanism: the instant centre runs off to infinity for perfectly ordinary
 geometry, and the projection of a 3D rigid motion is not itself a rigid planar
-motion.
+motion. The front axle of this car is one of those ordinary cases, twice over.
+Its side-view hinge axes are parallel to within 0.001°, which puts the
+side-view instant centre at infinity. In front view the two arms sit 0.54°
+apart, which puts the swing arm at 13.3 m, and moving the upper inner pickups
+1 mm in Z takes that to 9.1 m or 24.9 m depending on the direction. At 2 mm it
+is past 200 m. The number is arithmetically correct and useless, which is the
+reason none of the derived quantities here are built on it.
 
-793 assertions run against it. `python software/validate_all.py`.
+---
+
+## Verification, not validation
+
+793 assertions run against the maths. `python software/validate_all.py`.
+
+They check the tool against theory and against itself: closed-form identities,
+two independent derivations of the same quantity, symmetry and sign rules,
+limiting cases, and agreement between the solved linkage and the drawing-board
+construction it should reproduce. Where a published equation exists, the code
+derives it from first principles and asserts agreement with the published form,
+rather than coding the published form and trusting it.
+
+**None of it is validated against a measured car.** There is no rig data, no
+track data and no manufacturer geometry here, so nothing in this repository
+shows that these numbers describe a real Temerario GT3. What the suite
+establishes is narrower, and worth saying plainly: the kinematics are internally
+consistent, and the implementation matches the theory it claims to implement.
+The before/after differences are the useful output. The absolute values are the
+output of a model.
+
+The assumption that would most change the answers is the tyre. With no measured
+load-deflection data the tyre module ships a labelled linear placeholder, and
+everything downstream of tyre rate, ride frequency included, inherits it.
+
+---
+
+## How this was built
+
+The engineering is mine. The geometry decisions, the derivations, what to
+measure, what to believe and what to discard came from working the problem;
+`software/MATHS.md` shows the worked maths behind the front-corner equations.
+
+The code was written with AI assistance (Claude). I specified the physics and
+the checks, and it wrote and refactored the Python. Nothing went in on its word:
+a result had to agree with a derivation, an independent second route, or a
+published equation before it stayed, which is most of why the assertion count is
+what it is. Several errors caught that way are written up where they happened,
+in `software/config.py`, `software/ackermann.py` and `software/MATHS.md`,
+because a sign error that two halves of a project disagree about silently is
+more instructive than a clean result.
 
 ---
 
@@ -23,7 +112,7 @@ python software/explorer.py
 Windows users can double-click `run_tool.bat` instead.
 
 Needs Python 3.10 or later, NumPy, Matplotlib and Tkinter. SciPy is optional:
-one validation section uses it and is skipped if it is missing.
+one check uses it and is skipped if it is missing.
 
 ---
 
@@ -128,8 +217,9 @@ three on spring rate, because the motion ratio is squared.
 
 ```
 hardpoints_fusion.csv    the hard points the tool loads on startup
-hardpoints/              a second, redesigned set to load
-software/                the solver, the application, the validation suite
+hardpoints/              a second, redesigned set, plus the two scripts that
+                         print the claims made about it
+software/                the solver, the application, the verification suite
 studies/                 eight standalone parameter sweeps, with their plots
 suspension_tool/         a two-corner axle model the RC-in-roll view reuses
 REFERENCES.md            the books and papers behind the maths
@@ -155,4 +245,12 @@ at measurements of your own.
 
 ## Licence
 
-MIT, see [LICENSE](LICENSE). The hard points are an independent reconstruction.
+MIT, see [LICENSE](LICENSE).
+
+The subject is the Lamborghini Temerario GT3. I have no connection to
+Lamborghini and this is not endorsed by them. The hard points are my own
+measurement, taken by hand in Fusion off a third-party display model of the
+car and rebased to the car's origin. They are not manufacturer data and no
+Lamborghini document, drawing or CAD file is included here. The display model
+itself is not redistributed, which is why the side-view silhouette behind the
+anti-geometry construction is absent unless you supply your own.

@@ -9,6 +9,16 @@ shape of the dependence is visible rather than inferred.
 They all run against the hard points in `hardpoints_fusion.csv`, the same file
 the tool loads.
 
+The rear ones run at **−2.7°** static camber, the module default in
+`software/rear_geometry.py`. The comparison table in
+[../hardpoints/README.md](../hardpoints/README.md) runs the rear at **−1.5°**,
+because that is what the redesigned set is specified at, and the decision came
+after these scripts were written. Camber is a setup input rather than a hard
+point, so it shifts some readouts without changing the geometry: over that 1.2°
+the rear roll centre moves 0.4 mm and rear scrub moves 7.3 mm. Camber recovery
+does not move at all, because the linkage sets it. The note at the bottom of
+that README has the numbers.
+
 ```bash
 cd studies
 python task1_1_camber_vs_kpi.py

@@ -71,12 +71,59 @@ car ever sees.
 
 ## The line worth pointing at
 
-The roll-centre migration row. It did not come from moving the roll centre. It
-came from lengthening both wishbones **along their own lines**, which leaves
-every static value identical (the arm's tangent is unchanged, only its radius
-moves) while slowing how fast the instant centre sweeps. Front view, static
-printout, KPI, caster, scrub, trail: all frozen. Migration drops by a factor of
-roughly ten.
+The roll-centre migration row, but not for the reason the table makes it look.
+
+The table's two columns differ by the *whole* redesign, so its 847 mm to 86 mm
+is the net of every step: the roll centre came up out of the ground, KPI went
+from −2.73° to +7.01°, caster and scrub moved. The step I would actually defend
+is one of those, and the table cannot show it in isolation, so
+`verify_lengthening.py` builds the geometry that sits between the two columns:
+
+```bash
+python hardpoints/verify_lengthening.py
+```
+
+It takes the starting hard points and changes **only** the arm radii, sliding
+each wishbone's two inner pickups along the arm line until they match the
+redesigned values. A ball joint traces a circle of radius `r` about its inner
+hinge axis; translating the pickups along that radius moves the axis without
+rotating it, so the joint does not move and its velocity direction, which is
+perpendicular to both the axis and the radius, does not move either. Position
+and first-order motion are frozen by construction. Only the curvature `1/r`
+changes.
+
+| rear axle, \|RC lateral\| at 1° of roll | |
+|---|---|
+| starting | 846.8 mm |
+| starting, arms lengthened and nothing else | **28.2 mm** |
+| full redesign | 86.1 mm |
+
+Lengthening alone is worth **30×**, which is more than the net figure in the
+table. The later steps gave 57.9 mm of it back, in exchange for a roll centre
+above ground. The front behaves the same way: 146.1 mm to 10.3 mm on the
+lengthening alone, 49.8 mm after the rest of the redesign.
+
+The script also prints what the step cost, which is the part worth checking.
+KPI, caster, scrub and trail come out at **delta 0.000000000**. Roll-centre
+height moves 0.0014 mm, camber gain 1.3 × 10⁻⁵ °/25 mm, bump steer
+1.5 × 10⁻⁶ °/mm: solver noise, not design change. Migration is a second-order
+property of the linkage, so it can be bought without spending anything
+first-order. That is the whole finding, and it is the one thing here I had not
+read anywhere first.
+
+## A note on the static camber settings
+
+The table above runs the rear at −1.5°, the value the redesigned set is
+specified at. The rear studies in `../studies/` run at −2.7°, which is the
+module default in `software/rear_geometry.py` and predates the decision to
+specify the rear at −1.5°. That is why the study plot quotes 20.4 % recovery
+with the roll centre 52.0 mm underground while this table says 20.4 % and
+−51.6 mm: same geometry, same definitions, 1.2° apart on a setup input.
+
+Camber recovery does not care, because it is set by the linkage. Roll-centre
+height moves 0.4 mm over that range and scrub moves 6.08 mm per degree, which
+is the one to watch: rear scrub reads 145.7 mm at −2.7° and 138.4 mm at −1.5°
+on the same hard points.
 
 ## Known gap: the front tie rod
 
