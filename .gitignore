@@ -39,9 +39,11 @@ env/
 # ---------------------------------------------------------------------------
 # Output and scratch
 # ---------------------------------------------------------------------------
+# Figures are output, EXCEPT the study plots, which are the point of studies/
 *.png
 *.jpg
 *.svg
+!studies/plots/*.png
 !docs/*.png
 hardpoints_*_out.csv
 snapshots/

@@ -1,0 +1,43 @@
+# Redesigned hard points - front and rear, both corners complete.
+#
+# The result of working the front axle and then the rear through this tool.
+# Load it on the FRONT page, then load it again on the REAR page.
+#
+# Resulting values:
+#   FRONT  KPI 7.64  caster 7.99  scrub 17.33  trail 30.21
+#          camber gain -0.694 /25mm   bump steer -0.00277 deg/mm
+#          roll centre +30.78 mm      RC slope -0.675
+#   REAR   KPI 7.01  caster 3.00  scrub 7.06  trail 30.00  (static camber -1.5 deg)
+#          camber gain -0.789 /25mm   bump steer +0.00030 deg/mm toe-IN
+#          roll centre +38.01 mm      RC slope -0.779
+#          FVSA 1830   recovery 46.8 %   arm ratio 1.234   RC lateral 86 mm/deg
+#
+#   wheelbase 2700.0   front track 1742.0   rear track 1712.0
+#
+# Frame: X lateral (+ outboard), Y longitudinal (+ forward), Z vertical (+ up), mm.
+# These are the right-hand corners; the left side is their mirror.
+Corner,Point,X_mm,Y_mm,Z_mm
+FRONT,Upper wishbone - outer (UBJ),815.936,1222.414,399.588
+FRONT,Upper wishbone - inner front,541.026,1398.372,354.029
+FRONT,Upper wishbone - inner rear,541.026,1160.949,354.029
+FRONT,Lower wishbone - outer (LBJ),835.820,1243.229,251.311
+FRONT,Lower wishbone - inner front,472.189,1356.858,218.592
+FRONT,Lower wishbone - inner rear,472.190,1161.088,218.589
+FRONT,Tie rod - outer,831.203,1368.208,321.595
+FRONT,Tie rod - inner,436.844,1324.982,274.777
+FRONT,Wheel centre,871.000,1248.293,336.166
+FRONT,Lower Shock mount,730.792,1245.698,258.958
+FRONT,Upper Shock mount,461.913,1223.244,520.260
+REAR,Upper wishbone - outer (UBJ),804.250,-1444.612,437.503
+REAR,Upper wishbone - inner front,484.096,-1306.738,372.881
+REAR,Upper wishbone - inner rear,484.096,-1520.197,372.880
+REAR,Lower wishbone - outer (LBJ),825.106,-1435.732,267.883
+REAR,Lower wishbone - inner front,422.314,-1279.645,225.182
+REAR,Lower wishbone - inner rear,422.304,-1583.591,226.181
+REAR,Wheel centre,856.000,-1451.708,347.542
+REAR,Lower Shock mount,710.198,-1426.845,420.320
+REAR,Upper Shock mount,390.621,-1426.845,762.697
+REAR,Drive shaft - outer,830.122,-1418.781,364.651
+REAR,Drive shaft - Inner,448.193,-1418.781,296.254
+REAR,Toe link - inner,432.161,-1220.090,296.486
+REAR,Toe link - outer,761.076,-1339.735,347.759

@@ -1,182 +1,162 @@
 # GT3 suspension kinematics workbench
 
-An interactive tool for designing and interrogating double-wishbone suspension
-geometry, written from first principles and backed by an executable validation
-suite of **793 assertions**.
+A desktop tool for designing double-wishbone suspension geometry. Load a set of
+hard points, move one, and every derived quantity updates on the real linkage.
 
-It solves the real 3D linkage. Nothing in it relies on the side-view or
-front-view instant-centre constructions that textbooks draw, because those are
-projections of a 3D mechanism and are both ill-conditioned — the instant centre
-runs off to infinity for perfectly ordinary geometry — and slightly wrong, since
-the projection of a 3D rigid motion is not itself a rigid planar motion.
+It solves the corner in 3D. There is no side-view or front-view instant-centre
+construction anywhere in the maths, because those are projections of a 3D
+mechanism: the instant centre runs off to infinity for perfectly ordinary
+geometry, and the projection of a 3D rigid motion is not itself a rigid planar
+motion.
 
----
-
-## What it does
-
-Load a set of hard points, move one, and watch every derived quantity move with
-it, live, on the real mechanism.
-
-| area | what you get |
-|---|---|
-| **Steering axis** | KPI, caster, scrub radius, mechanical trail, and how each moves with steer and with travel |
-| **Camber** | camber vs bump, vs roll, vs steer; camber recovery; the front-view swing arm behind it |
-| **Roll centre** | height at ride, height through travel, and lateral migration in roll — the number that actually matters |
-| **Bump steer** | toe vs travel, with the slope and the curvature separated |
-| **Ackermann** | the axle-level percentage, on the real steer geometry |
-| **Anti-geometry** | anti-dive, anti-lift and anti-squat, with the front-view coupling made visible |
-| **Springs** | motion ratio solved from the linkage, coil rate, ride frequency on both of its definitions |
-| **Anti-roll bars** | blade rates, the drop-link motion ratio solved from the geometry, roll-stiffness distribution |
-| **Mechanical balance** | lateral load-transfer distribution and roll-stiffness maps |
-| **Geometry 2D / 3D** | front, side and top views with the construction lines drawn on them |
+793 assertions run against it. `python software/validate_all.py`.
 
 ---
 
-## Quick start
+## Install and run
 
 ```bash
 pip install -r requirements.txt
 python software/explorer.py
 ```
 
-Hard points come from `hardpoints_fusion.csv` at the repository root — a plain
-`Corner,Point,X,Y,Z` table exported from CAD. Edit it, or move points live in
-the tool and save a new one.
+Windows users can double-click `run_tool.bat` instead.
 
-Run the validation suite:
-
-```bash
-python software/validate_all.py
-```
+Needs Python 3.10 or later, NumPy, Matplotlib and Tkinter. SciPy is optional —
+one validation section uses it and is skipped if it is missing.
 
 ---
 
-## Validation
+## Workflow
 
-The suite is the point, not an afterthought. It runs 17 independent files and
-asserts physics rather than snapshots: identities that must hold for any
-geometry, sign conventions, limiting cases, and agreement between methods that
-were derived separately.
+**1. Point it at a set of hard points.**
+
+`hardpoints_fusion.csv` in the repository root is what loads on startup. It is
+a plain table:
 
 ```
-scrub_trail 33 · wishbone 14 · geom_edit 16 · axle 26 · explorer 91
-rear_geometry 19 · rear_bump 14 · rear_roll 31 · load_transfer 50
-conventions 29 · ackermann 34 · springs 94 · arb 102 · roll_axis 38
-anti_geometry 85 · mech_balance 75 · hardpoint_audit 42
---------------------------------------------- 793 pass, 0 fail, 17 suites
+Corner,Point,X_mm,Y_mm,Z_mm
+FRONT,Upper wishbone - outer (UBJ),815.936,1222.414,399.588
+...
 ```
 
-A sample of what is actually checked:
+`X` is lateral and positive outboard, `Y` is longitudinal and positive forward,
+`Z` is vertical. The file holds the front-right and rear-right corners; the left
+side is their mirror.
 
-- a rigid tyre returns the wheel rate exactly; two equal rates in series halve
-- the half-step anti-roll-bar identity is the **harmonic** mean, derived rather
-  than assumed, and it beats the arithmetic mean as any series path must
-- `K_s = K_w / R_M²` and `K_s = K_w · MR²` agree to machine precision in both
-  motion-ratio conventions, and an unknown convention raises rather than being
-  silently wrong by a factor of `R_M⁴`
-- with both side-view hinge axes parallel at angle *t*, the anti-geometry
-  coefficient is `tan t` exactly
-- a percentage field never holds a length — written after a bug put a 1404 mm
-  kingpin ground track into a field labelled `ackermann_pct`
+A second set is in `hardpoints/` — the geometry this project ended up with after
+a front and rear redesign. Load it to see a worked-through result instead of the
+starting point.
+
+**2. Pick a page.** Three across the top: FRONT, REAR, VEHICLE.
+
+**3. Edit points on the Hard points tab.** Type a coordinate, press Enter. Every
+other tab recalculates. The reference geometry stays drawn underneath so a
+change is visible as a difference rather than a new picture.
+
+**4. Read the numbers, not just the curves.** Each corner page carries a text
+readout with the static values — KPI, caster, scrub, trail, camber gain, camber
+recovery, bump steer, roll-centre height, motion ratio, steering arm.
+
+**5. Save.** Writes a CSV in the same format, so a saved set loads straight back.
 
 ---
 
-## Some design decisions worth reading the code for
+## The tabs
 
-**Anti-geometry without instant centres.** The corner has one degree of freedom,
-so apply a force at the contact patch and ask when the spring feels nothing:
-`F_y·dP_y + F_z·dP_z = 0`. Everything reduces to one quantity — the fore-aft
-motion of a reference point per mm of wheel travel. Exact on the real 3D
-mechanism, no singularity, and it collapses to the textbook answer wherever the
-textbook answer is valid. See `software/anti_geometry.py`.
+### FRONT and REAR pages
 
-**The reference point depends on what reacts the torque, not on what the force
-is.** Outboard brakes react on the upright, so the reference is the contact
-patch. An inboard differential reacts on the chassis, so the reference is the
-wheel centre. A GT3 has both, which means the rear axle has two different anti
-numbers from one piece of geometry, differing by exactly one wheel radius of
-lever.
+| tab | what it shows | what moves it |
+|---|---|---|
+| **Camber–KPI**, **Camber–caster** | camber change against steer angle, one curve per KPI or caster value | the two ball joints |
+| **Camber map** | camber over the KPI–caster plane at a chosen steer angle | — |
+| **Patch path** | where the contact patch travels as the wheel steers | scrub and trail |
+| **Scrub & trail** | both against steer, with the sign convention drawn | sliding the ball joints along the steering axis |
+| **Wheelbase & track** | how much each one changes with steer | scrub sets the curvature, trail sets the slope |
+| **Heave & bump steer** | toe against wheel travel | the tie rod or toe link, after the instant centre is settled |
+| **Body roll** | camber against body roll, which is what the tyre actually sees | camber recovery, i.e. FVSA |
+| **Roll centre** | height against wheel travel | common-mode inner pickup height |
+| **RC in roll** | the roll centre's lateral migration — usually the number that matters | the ratio of the two arm lengths |
+| **KPI/caster in bump** | how the steering axis itself moves through travel | the side-view hinge-axis angles |
+| **Motion ratio** | wheel travel over spring travel, through the stroke | where the damper's lower mount sits, and how far the damper leans |
+| **Ackermann** | the axle-level percentage on the real steer geometry (front only) | the tie-rod outer, fore and aft |
+| **Geometry 2D / 3D** | front, side and top views with the construction lines on them | — |
 
-**"Ride frequency" means two different things**, and the published benchmark
-bands belong to only one of them. The wheel-rate definition leaves the tyre out
-entirely; the ride-rate definition puts it in series. On a racing car the wheel
-rate is about half the tyre rate, so the tyre is worth roughly 15 % of the
-frequency and the two numbers are not interchangeable. Every function returns
-both. See `software/springs.py`.
+### VEHICLE page
 
-**Motion-ratio convention is a single switch.** Internally `R_M` is spring
-travel over wheel travel, because that is what the solver produces. Everything
-shown to a human uses the textbook `MR`, wheel travel over spring travel.
-`software/springs.py` is the only place the two are ever converted, because
-mixing them is an `R_M⁴` error.
+| tab | what it shows |
+|---|---|
+| **Load transfer & g-g** | wheel loads under combined lateral and longitudinal acceleration |
+| **Springs** | coil rate from a target ride frequency, motion ratio solved from the linkage, both definitions of ride frequency side by side |
+| **Anti-roll bars** | bar and blade rates, the drop-link ratio solved from the geometry, roll-stiffness split |
+| **Roll axis** | both roll centres and the axis between them, in side view |
+| **Anti geometry** | anti-dive, anti-lift and anti-squat, with what the side-view tilt costs in the front view |
+| **Mechanical balance** | lateral load-transfer distribution against spring and bar changes |
 
-**A damper bolted to the wrong arm is a factor of 2.9 on spring rate.** The
-solver picks the member the lower mount actually rides on rather than assuming
-the lower wishbone, because the motion ratio enters the rate squared.
+---
+
+## Things worth knowing before you change a number
+
+**Motion ratio is shown the textbook way.** `MR` is wheel travel over spring
+travel, so the coil rate is `K_s = K_w · MR²`. Internally the solver works in
+the reciprocal, because that is what it produces directly. `software/springs.py`
+is the only place the two meet. Mixing them is an error to the fourth power.
+
+**Ride frequency means two different things.** One definition leaves the tyre
+out, the other puts it in series with the spring. On a racing car the wheel rate
+is roughly half the tyre rate, so the two numbers differ by about 15 % and the
+published target bands belong to only one of them. Every spring function returns
+both and the panel prints both.
+
+**Anti-geometry is computed from patch motion, not from a swing arm.** The
+corner has one degree of freedom, so a force at the patch does no work on the
+spring when `F_y·dP_y + F_z·dP_z = 0`. That reduces the whole subject to the
+fore-aft motion of one reference point per mm of wheel travel. Which point
+depends on what reacts the torque: outboard brakes react on the upright, so the
+contact patch; an inboard differential reacts on the chassis, so the wheel
+centre. A GT3 has both, which is why the rear axle reads two different anti
+numbers from one piece of geometry.
+
+**The damper has to be on the right arm.** The solver works out which member the
+lower mount actually rides on rather than assuming the lower wishbone. Getting
+that wrong on a rear corner where the damper picks up high is a factor of nearly
+three on spring rate, because the motion ratio is squared.
 
 ---
 
 ## Layout
 
 ```
-hardpoints_fusion.csv        default CAD hard points, both corners
-software/
-  wishbone_solver.py         the 3D linkage solve everything else sits on
-  scrub_trail.py             steering axis, contact patch, scrub, trail
-  rear_geometry.py           rear corner; the toe link as a fixed tie rod
-  anti_geometry.py           anti-dive / anti-lift / anti-squat
-  roll_axis.py               roll centres and the roll axis
-  springs.py                 motion ratio, coil rate, ride frequency
-  arb.py                     anti-roll bars, blades, drop-link ratio
-  mech_balance.py            lateral load-transfer distribution
-  load_transfer.py           the load-transfer model
-  ackermann.py  steer_camber.py  jacking.py  tyre.py  rim_envelope.py
-  explorer.py  viewer.py     the application and its 2D / 3D views
-  validate_*.py              the suite
-  benchmarks.py              optional reference data, see below
-suspension_tool/             a validated two-corner axle model, reused by the
-                             roll-centre-in-roll view
+hardpoints_fusion.csv    the hard points the tool loads on startup
+hardpoints/              a second, redesigned set to load
+software/                the solver, the application, the validation suite
+studies/                 eight standalone parameter sweeps, with their plots
+suspension_tool/         a two-corner axle model the RC-in-roll view reuses
+REFERENCES.md            the books and papers behind the maths
 ```
 
 ---
 
 ## Reference data
 
-This project was developed partly against a manufacturer's performance handbook
-and a tyre supplier's data booklet. Both are confidential documents, and **no
-figure from either is in this repository.**
+Some of this work was done alongside a manufacturer's performance handbook and a
+tyre supplier's data booklet. Both are confidential and **no figure from either
+is in this repository.**
 
 Where the code wants a reference car or a measured tyre it asks
 `software/benchmarks.py`, which looks for a private module on `GT3_PRIVATE_DIR`
-— a folder deliberately kept outside this tree, so publishing the repository
-cannot leak anything even if a `.gitignore` rule is edited by mistake.
+— a folder outside this tree, so publishing the repository cannot leak anything
+even if a `.gitignore` rule is edited by mistake.
 
-Without private data installed:
-
-- reference overlays are hidden, and the checks that compare against them are
-  skipped; everything else runs identically
-- the anti-geometry target falls back to the open literature — Gillespie's 50 %
-  practical anti-dive ceiling, and Adams' 5–30 % range with a 25 % limit for an
-  independent rear suspension
-- the roll-axis reference falls back to the ground-level axis, the classical
-  neutral case
-- the tyre falls back to a clearly-labelled linear placeholder carcass
-
-`software/benchmarks_private.example.py` documents the shape so anyone can plug
-in data they are entitled to use.
-
----
-
-## Requirements
-
-Python 3.10+, NumPy, Matplotlib, Tkinter. SciPy is optional — one validation
-section uses it for a least-squares fit and is skipped without it.
+With no private data installed the tool runs the same, minus the comparisons:
+anti-geometry targets come from the open literature, the roll-axis reference is
+the ground-level axis, and the tyre is a labelled linear placeholder.
+`software/benchmarks_private.example.py` shows the shape if you have data of
+your own.
 
 ---
 
 ## Licence
 
-MIT. See [LICENSE](LICENSE).
-
-The vehicle this geometry was developed for is a real car. The hard points here
-are an independent reconstruction, not manufacturer data.
+MIT, see [LICENSE](LICENSE). The hard points are an independent reconstruction,
+not manufacturer data.
