@@ -2857,14 +2857,14 @@ class AntiGeometryPanel(ttk.Frame):
         """The hard points the tilt boxes actually move, and the reference
         points the anti percentages are actually measured from.
 
-        Mirrors the coordinate block in Soham's F1 sheet, with two additions
+        Mirrors the coordinate block in my own F1 sheet, with two additions
         that sheet does not have: the DESIGNED Z next to the CAD Z (so the tilt
         angle turns back into numbers you can type into CAD), and the reference
         points, which are what the physics uses and are not obtainable from the
         inner pivots alone.
 
         NOTE THE FRAME. This project uses X lateral / Y longitudinal / Z up;
-        Soham's F1 sheet uses x longitudinal / y lateral / z up. Same points,
+        That sheet uses x longitudinal / y lateral / z up. Same points,
         first two columns swapped. Columns here are labelled explicitly so the
         two can be compared without a transcription error.
         """

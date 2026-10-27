@@ -40,7 +40,7 @@ VALIDATION SUITE for anti-dive, anti-lift and anti-squat.
                      SHAPE: strong anti under braking at both ends, near-zero
                      under power, all flat with travel, all under Gillespie's
                      50 % practical ceiling.
- 11  EXTERNAL      - Soham's own F1 anti-dive/squat spreadsheet, built
+ 11  EXTERNAL      - an independent F1 anti-dive/squat spreadsheet I built
                      independently on a different car (L/H 11.53 vs our 5.88)
                      with hand-measured CAD angles, reproduced to 1e-8 on all
                      three of its valid outputs. The fourth -- a front anti-lift
@@ -438,7 +438,7 @@ else:
           0.0 < _ad < 8.0, f"{_ad:+.2f} deg of side-view rake on both front arms")
 
 # ------------------------------------------ 11. against an independent sheet
-print("\n11. AGAINST SOHAM'S OWN F1 ANTI-DIVE / ANTI-SQUAT SPREADSHEET")
+print("\n11. AGAINST AN INDEPENDENT F1 ANTI-DIVE / ANTI-SQUAT SHEET")
 # An external cross-check, and the best kind: a DIFFERENT car (F1, L/H = 11.53
 # against our 5.88), built independently in Google Sheets from two YouTube
 # derivations, with its four force-line angles measured by hand in CAD. If this
