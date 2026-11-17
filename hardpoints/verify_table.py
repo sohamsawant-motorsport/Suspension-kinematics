@@ -155,6 +155,17 @@ ROWS = (
 )
 
 
+def _utf8_stdout():
+    """Windows consoles still default to cp1252, which cannot encode the
+    typographic minus this script prints, so a plain `python verify_table.py`
+    died with UnicodeEncodeError before reaching the table. Ask for UTF-8 and
+    carry on if the stream will not take it."""
+    try:
+        sys.stdout.reconfigure(encoding="utf-8")
+    except (AttributeError, OSError, ValueError):
+        pass
+
+
 def show(value, fmt):
     """Format one cell with a typographic minus, so the output can be pasted
     into README.md and compared with it character for character."""
@@ -164,6 +175,7 @@ def show(value, fmt):
 
 
 def main():
+    _utf8_stdout()
     data = {}
     for name, path in SETS:
         if not os.path.exists(path):

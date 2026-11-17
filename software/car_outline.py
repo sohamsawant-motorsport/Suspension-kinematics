@@ -157,7 +157,16 @@ if __name__ == "__main__":
 
     yf = float(cfg._load_front_points()["Wheel centre"][1])
     yr = float(rgeo.load_rear()["Wheel centre"][1])
-    y, lo, hi = outline(yf, yr)
+    got = outline(yf, yr)
+    if got is None:
+        print(f"axles at Y {yf:+.1f} / {yr:+.1f} mm  ->  wheelbase {yf - yr:.1f}")
+        print(f"no silhouette asset at {_PATH}")
+        print("The body outline is baked from a third-party mesh that is not"
+              " redistributed with this repository, so it is absent here. The"
+              " tool runs without it: the anti-geometry construction simply"
+              " draws on empty axes. See the docstring to bake your own.")
+        raise SystemExit(0)
+    y, lo, hi = got
     print(f"axles at Y {yf:+.1f} / {yr:+.1f} mm  ->  wheelbase {yf - yr:.1f}")
     print(f"outline spans Y {y.min():+.0f} .. {y.max():+.0f} mm "
           f"(overhangs {y.max() - yf:.0f} front, {yr - y.min():.0f} rear)")
