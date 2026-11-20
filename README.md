@@ -50,27 +50,54 @@ Migration is the number a lap does not forgive. Roll-centre height is a static
 choice you make once; its lateral movement is what changes the car underneath
 the driver mid-corner, and it is invisible in every static readout.
 
-**The starting geometry is not a real GT3.** The hard points are my own Fusion
-measurement of a third-party display model, which is why stock KPI comes out at
-−5.27°, a value no manufacturer would build. That was useful rather than a
-problem: it gave me a car with realistic proportions and poor kinematics, so
-every number here is one I had to move myself.
+**The two columns are two different cars, deliberately.** The starting hard
+points are my own Fusion measurement of a third-party display model of the
+**Huracán GT3**, the Temerario's predecessor, and they measure as one: 2645 mm
+wheelbase against Lamborghini's published 2648 mm. The redesigned set moves the
+car onto the **Temerario GT3's** published envelope, 2700 mm wheelbase with
+1742 and 1712 mm tracks, all three taken from Lamborghini's own specification
+page and reproduced exactly.
+
+A display model is not a real GT3, which is the other half of the point. Stock
+KPI comes out at −5.27°, a value no manufacturer would build. That was useful
+rather than a problem: it gave me realistic proportions and poor kinematics to
+work on, so every number in the right-hand column is one I had to move myself.
 
 ---
 
 ## How the corner is solved
 
-It solves in 3D. There is no side-view or front-view instant-centre
-construction anywhere in the maths, because those are projections of a 3D
-mechanism: the instant centre runs off to infinity for perfectly ordinary
-geometry, and the projection of a 3D rigid motion is not itself a rigid planar
-motion. The front axle of this car is one of those ordinary cases, twice over.
-Its side-view hinge axes are parallel to within 0.001°, which puts the
-side-view instant centre at infinity. In front view the two arms sit 0.54°
-apart, which puts the swing arm at 13.3 m, and moving the upper inner pickups
-1 mm in Z takes that to 9.1 m or 24.9 m depending on the direction. At 2 mm it
-is past 200 m. The number is arithmetically correct and useless, which is the
-reason none of the derived quantities here are built on it.
+It solves in 3D, and nothing is read off a projected drawing. That matters
+because a swing arm is a projection of a 3D mechanism: it runs off to infinity
+for perfectly ordinary geometry, and the projection of a 3D rigid motion is not
+itself a rigid planar motion.
+
+The starting front axle is one of those ordinary cases, twice over. Its
+side-view hinge axes are parallel to within 0.0009°, which puts the side-view
+instant centre at infinity. In front view the two arms sit 0.54° apart, which
+puts the swing arm at 13.3 m; moving both upper inner pickups 1 mm in Z takes
+that to 9.1 m downwards or 24.9 m upwards, and 2 mm upwards puts it past 200 m.
+The number is arithmetically correct and useless. (All five figures are the
+starting set in `hardpoints_fusion.csv`. The redesigned set is unremarkable
+here: 2.0 m of swing arm, 4.27° between the arms.)
+
+So, precisely, what each quantity rests on:
+
+| | instant centre used? | |
+|---|---|---|
+| **anti-dive / lift / squat** | **no** | fore-aft contact-patch motion per mm of bump. `anti_geometry.side_view_ic` exists for the picture and nothing else reads it |
+| **camber recovery** | **no** | camber rate × half-track, straight from the solved sweep |
+| **roll centre** | **yes**, but | a front-view instant centre located from the solved 3D ball-joint velocities, not by crossing two projected wishbone lines |
+
+The roll centre is the honest exception, and the distinction is still worth
+something: `wishbone_solver.linkage_roll_centre` gets its instant centre from
+velocities the 3D solver produced, so it is exact for the real motion rather
+than for a drawing of it. It is still an instant centre, and it still degrades
+when the upright's rotation rate approaches zero. `roll_centre_curve` in the
+same module is the stricter alternative, built on the wheel's actual front-view
+rotation including the bump-steer twist; on geometry with large bump steer the
+two disagree, which is the classical construction quietly assuming bump steer
+is negligible.
 
 ---
 
@@ -304,9 +331,15 @@ at measurements of your own.
 MIT, see [LICENSE](LICENSE).
 
 The subject is the Lamborghini Temerario GT3. I have no connection to
-Lamborghini and this is not endorsed by them. The hard points are my own
-measurement, taken by hand in Fusion off a third-party display model of the
-car and rebased to the car's origin. They are not manufacturer data and no
-Lamborghini document, drawing or CAD file is included here. The display model
-itself is not redistributed, which is why the side-view silhouette behind the
-anti-geometry construction is absent unless you supply your own.
+Lamborghini and this is not endorsed by them.
+
+The starting hard points are my own measurement, taken by hand in Fusion off a
+third-party display model of the Lamborghini **Huracán GT3**, the Temerario's
+predecessor, and rebased to the car's origin. The redesigned set uses the
+Temerario GT3's published wheelbase and track. Neither is manufacturer data,
+and no Lamborghini document, drawing or CAD file is included here. The display
+model itself is not redistributed, which is why the side-view silhouette behind
+the anti-geometry construction is absent unless you supply your own.
+
+The only figures taken from Lamborghini are the ones they publish openly on
+their own specification pages: wheelbase, track and dry weight.
