@@ -457,12 +457,21 @@ check("F1 sheet's rear anti-lift reproduces exactly (Gillespie 7.29)",
 check("F1 sheet's anti-squat reproduces exactly (Gillespie 7.19)",
       abs(float(ag.anti_squat_pct(-PS_R, F1)) - 22.1299441) < 1e-6,
       f"{float(ag.anti_squat_pct(-PS_R, F1)):.6f} vs 22.1299441")
-check("the L/H leverage differs by 2x between the two cars, and both still work",
-      abs(F1["wheelbase_mm"] / F1["h_cg_mm"]
-          / (CAR["wheelbase_mm"] / CAR["h_cg_mm"]) - 1.961) < 0.01,
-      f"F1 {F1['wheelbase_mm'] / F1['h_cg_mm']:.2f} vs ours "
-      f"{CAR['wheelbase_mm'] / CAR['h_cg_mm']:.2f} -- an F1 car gets twice the "
-      f"anti per degree of force-line angle")
+# The claim is that an F1 car gets about TWICE the anti per degree of
+# force-line angle, because L/h is what converts the angle into a percentage.
+# Stated as a band, not as a hard-coded ratio: the previous version pinned it to
+# 1.961 +/- 0.01, which was the value for a 2645 mm wheelbase and broke the
+# moment the car's dimensions were corrected to the published 2700 mm. The
+# physical claim is robust; the third decimal of it was not.
+_lh_f1 = F1["wheelbase_mm"] / F1["h_cg_mm"]
+_lh_our = CAR["wheelbase_mm"] / CAR["h_cg_mm"]
+check("the L/H leverage differs by about 2x between the two cars",
+      1.8 < _lh_f1 / _lh_our < 2.2,
+      f"F1 {_lh_f1:.2f} vs ours {_lh_our:.2f}, ratio {_lh_f1 / _lh_our:.3f} -- "
+      f"an F1 car gets twice the anti per degree of force-line angle")
+check("and both cars sit in a sane L/h band, so both still work",
+      4.0 < _lh_our < 8.0 and 9.0 < _lh_f1 < 14.0,
+      f"GT3 {_lh_our:.2f}, F1 {_lh_f1:.2f}")
 # The one place the sheet and this module part company, and this module is right:
 # an RWD front transmits NO longitudinal force under power, so no geometry can
 # give it anti-lift. The sheet applies a drive share of 1.0 to the front.

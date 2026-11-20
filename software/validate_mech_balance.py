@@ -193,8 +193,30 @@ c2 = dict(CAR)
 c2["arb_f"] = CAR["arb_f"] * 1.02
 s2 = mb.state(c2, RC_F, RC_R, tyre_rate=KT)
 k_fd = (s2["lltd_f"] - L0) / (s2["front_share_pct"] - s["front_share_pct"])
-check("k measured by finite difference == the transfer model's elastic share",
-      abs(k_fd - k_model) < 2e-3, f"{k_fd:.5f} vs {k_model:.5f}")
+# This identity -- dLLTD/d(front roll-stiffness share) == the elastic fraction
+# -- is EXACT only on a car whose two tracks are equal. Each axle divides its
+# transfer by its own track, so with unequal tracks a second-order term
+# survives. Refining the finite-difference step does not remove it (the FD
+# converges to a value 3.2e-3 away, so it is model, not truncation), and the
+# residual scales with the track difference: 1.9e-3 at the starting car's
+# 16.6 mm, 3.4e-3 at the redesign's 30.0 mm. The old 2e-3 tolerance passed only
+# because the starting tracks happened to sit just inside it.
+c_sym = ltr.temerario_gt3(freq_f=3.86, freq_r=2.89,
+                          track_f=CAR["track_f_mm"], track_r=CAR["track_f_mm"])
+s_sym = mb.state(c_sym, RC_F, RC_R, tyre_rate=KT)
+c_sym2 = dict(c_sym)
+c_sym2["arb_f"] = c_sym["arb_f"] * 1.02
+s_sym2 = mb.state(c_sym2, RC_F, RC_R, tyre_rate=KT)
+k_fd_sym = ((s_sym2["lltd_f"] - s_sym["lltd_f"])
+            / (s_sym2["front_share_pct"] - s_sym["front_share_pct"]))
+check("k by finite difference == the elastic share EXACTLY on equal tracks",
+      abs(k_fd_sym - s_sym["elastic_frac"]) < 1e-9,
+      f"{k_fd_sym:.8f} vs {s_sym['elastic_frac']:.8f}")
+check("and agrees to better than 0.5 % on the real, unequal-track car",
+      abs(k_fd - k_model) / k_model < 5e-3,
+      f"{k_fd:.5f} vs {k_model:.5f} "
+      f"({abs(k_fd - k_model) / k_model * 100:.2f} %) at "
+      f"{CAR['track_f_mm'] - CAR['track_r_mm']:.1f} mm of track difference")
 check("k is strictly below 1 with both roll centres above ground",
       0.0 < k_model < 1.0, f"{k_model:.4f}")
 k_ground = mb.elastic_fraction(CAR, 0.0, 0.0, tyre_rate=KT)

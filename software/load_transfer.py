@@ -246,8 +246,20 @@ def inside_envelope(a_lat, a_long, a_lat_max=1.2, a_accel_max=1.0,
 
 # ------------------------------------------------------------------ the car
 def temerario_gt3(k_arb_scale_f=2.15, k_arb_scale_r=0.674,
-                  freq_f=3.4, freq_r=3.2, track_f=1662.4, track_r=1645.8):
+                  freq_f=3.4, freq_r=3.2, track_f=1742.0, track_r=1712.0,
+                  wheelbase=2700.0):
     """Temerario GT3 ESTIMATES -- stated assumptions, not measured data.
+
+    DIMENSIONS are the only figures here that are not estimates. Wheelbase
+    2700 mm, front track 1742 mm, rear track 1712 mm and the 1300 kg dry weight
+    are published by Lamborghini on their own Temerario GT3 specification page.
+    The redesigned hard points in hardpoints/ reproduce all three exactly.
+
+    These used to default to 2645.0 / 1662.4 / 1645.8, which are the STARTING
+    geometry's numbers -- and that geometry is a Huracan GT3, not a Temerario.
+    So a function called temerario_gt3() was handing the Huracan's wheelbase to
+    load transfer, LLTD, mechanical balance and the anti-geometry percentages.
+    Pass the old values explicitly if you want to model the starting car.
 
     Mass/CG: FIA GT3 minimum class 1300 kg, 56 % rear (mid-engine), 90 kg
     unsprung per axle, CG 450 mm.
@@ -266,7 +278,7 @@ def temerario_gt3(k_arb_scale_f=2.15, k_arb_scale_r=0.674,
     kw_r = wheel_rate_from_frequency(sprung_r, freq_r)
     car = dict(mass_total_kg=mass, rear_frac=rf,
                unsprung_f_kg=uns, unsprung_r_kg=uns,
-               h_cg_mm=450.0, h_unsprung_mm=340.0, wheelbase_mm=2645.0,
+               h_cg_mm=450.0, h_unsprung_mm=340.0, wheelbase_mm=wheelbase,
                track_f_mm=track_f, track_r_mm=track_r,
                kw_f=kw_f, kw_r=kw_r,
                arb_f=kw_f * k_arb_scale_f, arb_r=kw_r * k_arb_scale_r)

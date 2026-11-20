@@ -71,7 +71,7 @@ check("front RC lower than rear reads as NOSE-DOWN (positive)", inc > 0)
 check("a level axis has zero inclination",
       abs(ra.inclination_deg(-100.0, -100.0, 2645.0)) < 1e-12)
 check("swapping the roll centres flips the sign",
-      abs(ra.inclination_deg(RCR, RCF, 2645.0) + inc) < 1e-9)
+      abs(ra.inclination_deg(RCR, RCF, CAR["wheelbase_mm"]) + inc) < 1e-9)
 
 # ---------------------------------------------------------------- 2. lever
 print("\n2. THE ROLL LEVER")
@@ -125,10 +125,29 @@ check("ABOVE ground makes it positive", _gp["geo_f"] > 0 and _gp["geo_r"] > 0)
 check("geometric transfer is LINEAR in roll-centre height",
       abs(ra.split(100.0, 0.0, CAR)["geo_f"]
           - 2 * ra.split(50.0, 0.0, CAR)["geo_f"]) < 1e-6)
-check("total transfer is conserved however it splits",
-      abs((s["total_f"] + s["total_r"])
-          - (_g0["total_f"] + _g0["total_r"])) < 1.0,
+# Conservation is EXACT only when the two tracks are equal. Each axle divides
+# its share by its OWN track, so moving a roll centre re-routes force between
+# the geometric path (set by that axle's track) and the elastic path (shared by
+# roll stiffness, not by track). With unequal tracks those two divisions do not
+# cancel and a small residual survives. It is proportional to the track
+# difference: 0.84 N at the starting car's 16.6 mm, 1.35 N at the redesign's
+# 30.0 mm. Assert the exact statement where it is exact, and bound the residual
+# where it is not, rather than picking a tolerance that happens to clear.
+_sym = ltr.temerario_gt3(freq_f=3.86, freq_r=2.89,
+                         track_f=CAR["track_f_mm"], track_r=CAR["track_f_mm"])
+_s_sym = ra.split(RCF, RCR, _sym)
+_g_sym = ra.split(0.0, 0.0, _sym)
+check("total transfer is EXACTLY conserved on an equal-track car",
+      abs((_s_sym["total_f"] + _s_sym["total_r"])
+          - (_g_sym["total_f"] + _g_sym["total_r"])) < 1e-9,
       "moving the RCs re-routes transfer, it does not create it")
+_resid = abs((s["total_f"] + s["total_r"]) - (_g0["total_f"] + _g0["total_r"]))
+_total = abs(_g0["total_f"] + _g0["total_r"])
+check("with unequal tracks the residual stays under 0.1 % of the transfer",
+      _resid / _total < 1e-3,
+      f"{_resid:.2f} N on {_total:.0f} N "
+      f"({_resid / _total * 100:.3f} %) at {CAR['track_f_mm'] - CAR['track_r_mm']:.1f} mm "
+      f"of track difference")
 
 # -------------------------------------------------------------- 4. in roll
 print("\n4. THE AXIS UNDER ROLL")
